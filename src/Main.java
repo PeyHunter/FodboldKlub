@@ -72,6 +72,10 @@ public class Main
                     memberList.findPlayer(searchedName);
                     break;
 
+                case 3:
+
+                    memberList.sorterSpillere();
+                    System.out.println(memberList);
 
 
 
