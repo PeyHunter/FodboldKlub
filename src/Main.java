@@ -26,7 +26,8 @@ public class Main
             System.out.println("2. Søg på spillere");
             System.out.println("3. Se spillere i alphabetisk");
             System.out.println("4. Slet kontakt");
-            System.out.println("5. Gem kontakter i fil");
+            System.out.println("5. Se liste med division 1 og 2");
+            System.out.println("6. Gem kontakter i fil");
             System.out.println("Exit");
 
             String input = scanner.nextLine();
@@ -63,6 +64,10 @@ public class Main
 
                     System.out.println("New member added:");
                     System.out.println(newMember);
+
+
+                    System.out.println("Saving to file...");
+                    memberList.saveToFile("members.txt");
                     break;
 
                 case 2:
@@ -77,29 +82,42 @@ public class Main
 
                     memberList.sorterSpillere();
                     System.out.println(memberList);
+                    break;
 
                 case 4:
 
-                    System.out.println("Which player do you need to delete?");
+                    System.out.println("First name of person to be deleted (incl. middle name)");
                     String fName = scanner.nextLine();
+
+                    System.out.println("Last name of person to be deleted");
                     String lName = scanner.nextLine();
 
                     memberList.findPlayer(fName, lName);
 
-                    System.out.println("Is this the person you want to delete?");
-
-
-
+                    memberList.delete(fName, lName);
                     System.out.println(memberList);
 
+                    System.out.println(fName + " " + lName + ", has been deleted" );
 
+                    memberList.saveToFile("members.txt");
 
                     break;
 
+                case 5:
+                    System.out.println("Which division do you want to see?");
+                    int division = scanner.nextInt();
+
+                    System.out.println("Division list");
+                    memberList.findDivision(division);
+                    break;
+
+
+                default:
+                    System.out.println("Invalid input - try again");
+                    break;
+
+
             }
-
-
-
         }
 
 
@@ -137,6 +155,8 @@ public class Main
 //Create all the methods.
 //Make the appropriate files and the code to handle the reading and writing to and from files.
 //        Create 30 members/players in random order, you have to variate age (between 10 - 35), first-/second team.
+
+
 
 //Test that all the functionality works!
 //Make it possible for the user to choose which field the list should be sorted by.

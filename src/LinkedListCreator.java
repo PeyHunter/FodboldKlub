@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -25,6 +26,13 @@ public class LinkedListCreator
     //iterator
     public void add(memberPlayer player)
     {
+        String formattedFirstName = capitalizeFirstAndLastName(player.getFirstName());
+        String formattedLastName = capitalizeFirstAndLastName(player.getLastName());
+
+        // Update the player's name with the formatted version
+        player.setFirstName(formattedFirstName);
+        player.setLastName(formattedLastName);
+
         Node newNode = new Node(player);
         if (head == null)
         {
@@ -40,42 +48,35 @@ public class LinkedListCreator
         }
     }
 
-    public void delete(memberPlayer player)
-    {
-        if (head == null)
-        {
+    public void delete(String fName, String lName) {
+        if (head == null) {
             System.out.println("List is empty");
             return;
         }
 
-        //If the player to delete is the first node
-        if (head.player.equals(player))
-        {
-            head = head.next;
-            System.out.println("Player deleted: " + player.getFirstName() + player.getLastName());
+        // Check if the first node matches the player
+        if (head.player.getFirstName().equals(fName) && head.player.getLastName().equals(lName)) {
+            head = head.next; // Set head to the next node
+            System.out.println("Player deleted: " + fName + " " + lName);
             return;
         }
 
         Node current = head;
         Node previous = null;
 
-        //Travers the list
-        while (current != null && !current.player.equals(player))
-        {
-            previous = current = current;
-            current = current.next;
+        // Traverse the list to find the player to delete
+        while (current != null) {
+            if (current.player.getFirstName().equals(fName) && current.player.getLastName().equals(lName)) {
+                previous.next = current.next; // Skip the node to delete it
+                System.out.println("Player deleted: " + fName + " " + lName);
+                return;
+            }
+            previous = current;  // Move previous to current
+            current = current.next;  // Move current to the next node
         }
 
-        // if player not found
-        if (current == null)
-        {
-            System.out.println("Player not found");
-            return;
-        }
-
-        // remove the node
-        previous.next = current.next;
-        System.out.println("Player deleted" + player.getFirstName() + " " + player.getLastName());
+        // If player was not found
+        System.out.println("Player not found");
     }
 
 
@@ -157,6 +158,87 @@ public class LinkedListCreator
             System.out.println("No player found");
         }
     }
+
+    public void findDivision(int division)
+    {
+        int division1 = 1;
+        int division2 = 2;
+
+        Node current = head;
+        boolean found = false;
+
+
+        while (current != null)
+        {
+            if (current.player.getTeam() == division)
+            {
+                found = true;
+                System.out.println(
+                        "Player found: " + current.player.getFirstName() + " " +
+                        current.player.getLastName() +
+                        ", Age: " + current.player.getAge() +
+                        ", Division: " + current.player.getTeam());
+            }
+            current = current.next;
+        }
+        if (!found)
+        {
+            System.out.println("No player found");
+        }
+    }
+
+    public void loadContactFromFile(String filename) {
+        if (!filename.endsWith(".txt")) {
+            filename += ".txt";  // Append .txt if not present
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Assuming data is in the format: Name: <firstName> <lastName>, Age: <age>, Division: <team>
+                String[] parts = line.split(", ");
+                if (parts.length >= 3) {  // Checking if data has enough parts
+                    // Extracting name, age, and division
+                    String name = parts[0].replace("Name: ", "").trim();
+                    String[] nameParts = name.split(" ");  // Split into first and last name
+                    String firstName = nameParts[0];
+                    String lastName = nameParts.length > 1 ? nameParts[1] : "";  // Handle case with no last name
+                    int age = Integer.parseInt(parts[1].replace("Age: ", "").trim());
+                    int division = Integer.parseInt(parts[2].replace("Division: ", "").trim());
+
+                    // Create a new memberPlayer object with extracted data
+                    memberPlayer player = new memberPlayer(firstName, lastName, age, division);
+                    // Add the new player to the playerListe
+                    playerListe.add(player);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void saveToFile(String filename) {
+        if (!filename.endsWith(".txt")) {
+            filename += ".txt";
+        }
+
+        // Write to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            Node current = head; // Start from the head of the linked list
+            while (current != null) {
+                memberPlayer player = current.player;
+
+                String line = "Name: " + player.getFirstName() + " " + player.getLastName() +
+                        ", Age: " + player.getAge() + ", Division: " + player.getTeam();
+                writer.write(line);
+                writer.newLine();
+                current = current.next; // Move to the next player
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
 
 
     //Merge Sort for linked LIst
@@ -250,7 +332,7 @@ public class LinkedListCreator
             result.append(current.player);
             current = current.next;
         }
-        result.append("null");
+
         return result.toString();
     }
 
