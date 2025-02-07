@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Random;
 
 
-
 public class LinkedListCreator
 {
 
@@ -23,7 +22,7 @@ public class LinkedListCreator
         this.playerListe = playerListe;
     }
 
-//iterator
+    //iterator
     public void add(memberPlayer player)
     {
         Node newNode = new Node(player);
@@ -41,32 +40,112 @@ public class LinkedListCreator
         }
     }
 
+    public void delete(memberPlayer player)
+    {
+        if (head == null)
+        {
+            System.out.println("List is empty");
+            return;
+        }
+
+        //If the player to delete is the first node
+        if (head.player.equals(player))
+        {
+            head = head.next;
+            System.out.println("Player deleted: " + player.getFirstName() + player.getLastName());
+            return;
+        }
+
+        Node current = head;
+        Node previous = null;
+
+        //Travers the list
+        while (current != null && !current.player.equals(player))
+        {
+            previous = current = current;
+            current = current.next;
+        }
+
+        // if player not found
+        if (current == null)
+        {
+            System.out.println("Player not found");
+            return;
+        }
+
+        // remove the node
+        previous.next = current.next;
+        System.out.println("Player deleted" + player.getFirstName() + " " + player.getLastName());
+    }
+
+
+//    public boolean validatePlayer(String name)
+//    {
+//        String fName = memberPlayer.getfirstName();
+//        if (name == fName)
+//        {
+//            return true;
+//        }
+//        return false;
+//
+//    }
+
     public void addRandomMembers()
     {
         String[] firstNames = {"Hans", "Mark", "Markus", "Brian", "Tom", "Peter", "John", "Liam", "Lucas", "Anton"};
         String[] lastNames = {"Hansen", "Jensen", "Brown", "Smith", "Johnson", "Williams", "Taylor", "Miller", "Davis", "Moore"};
+        String[] middleNames = {"A", "J", "W", "R", "D", "T", "Z", "U", "Q", "L"};
 
         for (int i = 0; i < 30; i++)
         {
             String firstName = firstNames[random.nextInt(firstNames.length)];
-            String lastName = lastNames[random.nextInt(firstNames.length)];
+            String lastName = lastNames[random.nextInt(lastNames.length)];
+            String fullName = firstName + " " + lastName;
             int age = random.nextInt(26) + 10;
             int team = random.nextInt(2) + 1;
 
+            // Check if the full name already exists
+            Node current = head;
+            boolean isDuplicate = false;
+
+            // Traverse the linked list to check for duplicates
+            while (current != null)
+            {
+                if (current.player.getFirstName().equals(firstName) && current.player.getLastName().equals(lastName))
+                {
+                    isDuplicate = true;
+                    break;
+                }
+                current = current.next;
+            }
+
+            // If duplicate, add a middle name
+            if (isDuplicate)
+            {
+                String middleName = middleNames[random.nextInt(middleNames.length)];
+                firstName = firstName + " " + middleName;  // Create a new first name with the middle name
+            }
+
+            // Create the player with firstName and lastName (now potentially including the middle name)
             memberPlayer player = new memberPlayer(firstName, lastName, age, team);
+
+            // Add the player to the linked list
             add(player);
         }
     }
 
-    public void findPlayer(String firstName)
+    public void findPlayer(String firstName, String lastName)
     {
-        String formattedNames = capitalizeFirstAndLastName(firstName.trim());
+        String formattedFirstName = capitalizeFirstAndLastName(firstName.trim());
+        String formattedLastName = capitalizeFirstAndLastName(lastName.trim());
+
         Node current = head;
         boolean found = false;
 
         while (current != null)
         {
-            if (current.player.getFirstName().equals(firstName))
+            if (current.player.getFirstName().equals(firstName) &&
+                    current.player.getLastName().equals(lastName))
             {
                 found = true;
                 System.out.println("Player found: " + current.player.getFirstName() + " " + current.player.getLastName());
@@ -75,34 +154,18 @@ public class LinkedListCreator
         }
         if (!found)
         {
-        System.out.println("No player found");
+            System.out.println("No player found");
         }
     }
 
 
-    public void searchForPlayer(String firstName)
-    {
-        Node current = head;
-        while (current != null)
-        {
-            if (current.player.getFirstName().equals(firstName))
-            {
-                System.out.println("Player found: " + current.player.getFirstName() + " " + current.player.getLastName());
-                return;
-            }
-            current = current.next;
-        }
-        System.out.println("Player not found");
-    }
-
-
-//Merge Sort for linked LIst
+    //Merge Sort for linked LIst
     public void sorterSpillere()
     {
         head = mergeSort(head);
     }
 
-//merge Sort for Linked List
+    //merge Sort for Linked List
     private Node mergeSort(Node head)
     {
         if (head == null || head.next == null)
@@ -125,7 +188,7 @@ public class LinkedListCreator
         if (head == null)
             return head;
         Node slow = head, fast = head.next;
-        while(fast != null && fast.next != null)
+        while (fast != null && fast.next != null)
         {
             slow = slow.next;
             fast = fast.next.next;
@@ -143,15 +206,13 @@ public class LinkedListCreator
         {
             result = a;
             result.next = sortedMerge(a.next, b);
-        }
-        else
+        } else
         {
             result = b;
             result.next = sortedMerge(a, b.next);
         }
         return result;
     }
-
 
 
     public String capitalizeFirstAndLastName(String name)

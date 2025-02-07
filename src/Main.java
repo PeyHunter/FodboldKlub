@@ -67,9 +67,10 @@ public class Main
 
                 case 2:
                     System.out.println("Søg på spillers fornavn");
-                    String searchedName = scanner.nextLine();
+                    String firstName = scanner.nextLine();
+                    String lastName = scanner.nextLine();
 
-                    memberList.findPlayer(searchedName);
+                    memberList.findPlayer(firstName, lastName);
                     break;
 
                 case 3:
@@ -77,7 +78,23 @@ public class Main
                     memberList.sorterSpillere();
                     System.out.println(memberList);
 
+                case 4:
 
+                    System.out.println("Which player do you need to delete?");
+                    String fName = scanner.nextLine();
+                    String lName = scanner.nextLine();
+
+                    memberList.findPlayer(fName, lName);
+
+                    System.out.println("Is this the person you want to delete?");
+
+
+
+                    System.out.println(memberList);
+
+
+
+                    break;
 
             }
 
