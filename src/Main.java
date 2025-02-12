@@ -14,6 +14,7 @@ public class Main
 
         memberList.addRandomMembers();
         System.out.println(memberList);
+        memberList.loadContactFromFile("members.txt");
 
         boolean running = true;
 
@@ -71,8 +72,9 @@ public class Main
                     break;
 
                 case 2:
-                    System.out.println("Søg på spillers fornavn");
+                    System.out.println("Søg på spillers fornavn: ");
                     String firstName = scanner.nextLine();
+                    System.out.println("Søg på spillers efternavn: ");
                     String lastName = scanner.nextLine();
 
                     memberList.findPlayer(firstName, lastName);

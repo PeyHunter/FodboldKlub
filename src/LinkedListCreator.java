@@ -187,6 +187,7 @@ public class LinkedListCreator
         }
     }
 
+    //HAVe a look at this later
     public void loadContactFromFile(String filename) {
         if (!filename.endsWith(".txt")) {
             filename += ".txt";  // Append .txt if not present
@@ -216,7 +217,7 @@ public class LinkedListCreator
             System.out.println("Error: " + e.getMessage());
         }
     }
-
+// have a look at this later
     public void saveToFile(String filename) {
         if (!filename.endsWith(".txt")) {
             filename += ".txt";
@@ -238,7 +239,6 @@ public class LinkedListCreator
             System.out.println("Error: " + e.getMessage());
         }
     }
-
 
 
     //Merge Sort for linked LIst
